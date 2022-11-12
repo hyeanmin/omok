@@ -1,0 +1,179 @@
+#include <stdio.h>
+#include<stdlib.h>
+#include <Windows.h>
+
+void check(int x, int y, int num);
+void horizon(int x, int y, int num);
+void vertical(int x, int y, int num);
+void diagon_Up(int x, int y, int num);
+void diagon_Down(int x, int y, int num);
+int base();
+
+int arr[19][19] = {0,}; //오목판
+int vic = 0;
+
+int main() {
+    int x, y; //돌의 좌표값
+    int num = 1;
+
+    while (1) {
+        base();
+        
+        if (vic == 5) {
+            if (num == -1) {
+                printf("흑돌의 승리!");
+            }
+            else {
+                printf("백돌의 승리!");
+            }
+            break;
+        }
+        vic = 0;
+
+        if (num == 1) {
+            printf("\n\n\t<<흑돌의 턴>>\n\n");
+
+            printf("흑돌의 좌표값 : ");
+            scanf("%d %d", &y, &x);
+
+            //+ 글자 예외처리
+
+            while (!(x <= 19 && x >= 1) || !(y <= 19 && y >= 1)) {
+                printf("지정 범위를 초과하였습니다. 재입력 하세요.\n");
+                while (getchar() != '\n');
+                printf("흑돌의 좌표값 : ");
+                scanf("%d %d", &y, &x);
+            }
+
+            while (arr[x][y] == 1 || arr[x][y] == -1) //중복 체크
+            {
+                printf("돌이 현재 위치에 있습니다. 재입력 하세요.\n");
+                printf("흑돌의 좌표값 : ");
+                scanf("%d %d", &y, &x);
+            }
+            arr[x][y] = 1;
+
+            check(x, y, num);
+            num = -1;
+        }
+
+        else {
+            printf("\n\n\t<<백돌의 턴>>\n\n");
+
+            printf("백돌의 좌표값 : ");
+            scanf("%d %d", &y, &x);
+
+            while (!(x <= 19 && x >= 1) || !(y <= 19 && y >= 1)) {
+                printf("지정 범위를 초과하였습니다. 재입력 하세요.\n");
+                printf("백돌의 좌표값 : ");
+                printf("%d, %d", x, y);
+                _sleep(5000);
+                scanf("%d %d", &y, &x);
+            }
+
+            while (arr[x][y] == 1 || arr[x][y] == -1)
+            {
+                printf("돌이 현재 위치에 있습니다. 재입력 하세요.\n");
+                printf("백돌의 좌표값 : ");
+                scanf("%d %d", &y, &x);
+            }
+
+            arr[x][y] = -1;
+
+            check (x, y, num);
+            num = 1;
+        }
+
+
+        system("cls");
+        x = 0, y = 0;
+    }
+}
+
+int base() {
+    for (int i = 0; i < 10; i++)
+    {
+        if (i == 0)
+            printf("0 ");
+        else
+            printf("%d ", i);
+    }
+    printf("\n");
+
+    for (int i = 1; i < 20; i++)
+    {
+        if (i < 10)
+            printf("%d ", i);
+        else
+            printf("%d", i);
+
+        for (int j = 1; j < 20; j++)
+        {
+            if (arr[i][j] == 0) {
+                printf("┼ ");
+            }
+            else {
+                if (arr[i][j] == 1) {
+                    printf("○");
+                }
+                else {
+                    printf("●");
+                }
+            }
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
+
+void check(int x, int y, int num) {
+    if (arr[x + 1][y] != 0 || arr[x - 1][y] != 0) { //가로
+        horizon(x, y, num);
+    }
+    else if (arr[x][y + 1] != 0 || arr[x][y - 1] != 0) { //세로
+        vertical(x, y, num);
+    }
+    else if (arr[x + 1][y+1] != 0 || arr[x - 1][y-1] != 0) { //우상향
+        diagon_Up(x, y, num);
+    }
+    else if (arr[x - 1][y + 1] != 0 || arr[x + 1][y - 1] != 0) { //우하향
+        diagon_Down(x, y, num);
+    }
+}
+
+void horizon(int x, int y, int num) {
+    for (int i = -4; i < 5; i++) //가로 확인
+    {
+        if (arr[x + i][y] == num) {
+            vic++;
+        }
+    }
+}
+
+void vertical(int x, int y, int num) {
+    for (int i = -4; i < 5; i++) //세로 확인 확인
+    {
+        if (arr[x][y+i] == num) {
+            vic++;
+        }
+    }
+}
+
+void diagon_Up(int x, int y, int num) {
+    for (int i = -4; i < 5; i++) //우상향 확인
+    {
+        if (arr[x + i][y+i] == num) {
+            vic++;
+        }
+    }
+}
+
+void diagon_Down(int x, int y, int num) {
+    for (int i = -4; i < 5; i++) //우하향 확인
+    {
+        if (arr[x + i][y - i] == num) {
+            vic++;
+        }
+    }
+}
