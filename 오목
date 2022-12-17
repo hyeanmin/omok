@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include<stdlib.h>
+#include <stdlib.h>
+#include <time.h>
 #include <Windows.h>
 
 void check(int x, int y, int num);
@@ -7,6 +8,7 @@ void horizon(int x, int y, int num);
 void vertical(int x, int y, int num);
 void diagon_Up(int x, int y, int num);
 void diagon_Down(int x, int y, int num);
+void easter_egg();
 int base();
 
 int arr[20][20] = {0,}; //오목판
@@ -21,10 +23,10 @@ int main() {
         
         if (vic == 5) {
             if (num == -1) {
-                printf("흑돌의 승리!");
+                printf("\n\n\t<흑돌의 승리!>\n\n");
             }
             else {
-                printf("백돌의 승리!");
+                printf("\n\n\t<백돌의 승리!>\n\n");
             }
             break;
         }
@@ -33,22 +35,20 @@ int main() {
             printf("\n\n\t<<흑돌의 턴>>\n\n");
 
             printf("흑돌의 좌표값 : ");
-            scanf("%d %d", &y, &x);
+            scanf_s("%d %d", &y, &x);
 
-            //+ 글자 예외처리
-
-            while (!(x <= 19 && x >= 1) || !(y <= 19 && y >= 1)) {
+            while (!(x <= 19 && x >= 1) || !(y <= 19 && y >= 1)) { //예외처리
                 printf("지정 범위를 초과하였습니다. 재입력 하세요.\n");
                 while (getchar() != '\n');
                 printf("흑돌의 좌표값 : ");
-                scanf("%d %d", &y, &x);
+                scanf_s("%d %d", &y, &x);
             }
 
             while (arr[x][y] == 1 || arr[x][y] == -1) //중복 체크
             {
                 printf("돌이 현재 위치에 있습니다. 재입력 하세요.\n");
                 printf("흑돌의 좌표값 : ");
-                scanf("%d %d", &y, &x);
+                scanf_s("%d %d", &y, &x);
             }
             arr[x][y] = 1;
 
@@ -60,20 +60,20 @@ int main() {
             printf("\n\n\t<<백돌의 턴>>\n\n");
 
             printf("백돌의 좌표값 : ");
-            scanf("%d %d", &y, &x);
+            scanf_s("%d %d", &y, &x);
 
             while (!(x <= 19 && x >= 1) || !(y <= 19 && y >= 1)) {
                 printf("지정 범위를 초과하였습니다. 재입력 하세요.\n");
                 while (getchar() != '\n');
                 printf("백돌의 좌표값 : ");
-                scanf("%d %d", &y, &x);
+                scanf_s("%d %d", &y, &x);
             }
 
             while (arr[x][y] == 1 || arr[x][y] == -1)
             {
                 printf("돌이 현재 위치에 있습니다. 재입력 하세요.\n");
                 printf("백돌의 좌표값 : ");
-                scanf("%d %d", &y, &x);
+                scanf_s("%d %d", &y, &x);
             }
 
             arr[x][y] = -1;
@@ -82,13 +82,12 @@ int main() {
             num = 1;
         }
 
-
-        system("cls");
+        system("cls"); //콘솔창 초기화
         x = 0, y = 0;
     }
 }
 
-int base() {
+int base() { //오목판
     for (int i = 0; i < 10; i++)
     {
         if (i == 0)
@@ -96,6 +95,9 @@ int base() {
         else
             printf("%d ", i);
     }
+
+    for(int i = 10; i < 20; i++)
+        printf("%d", i);
     printf("\n");
 
     for (int i = 1; i < 20; i++)
@@ -105,7 +107,7 @@ int base() {
         else
             printf("%d", i);
 
-        for (int j = 1; j < 20; j++)
+        for (int j = 1; j < 20; j++) //오목판 베이스
         {
             switch (arr[i][j]) 
             {
@@ -126,7 +128,7 @@ int base() {
     return 0;
 }
 
-void check(int x, int y, int num) {
+void check(int x, int y, int num) { //승리조건 확인
     if (arr[x + 1][y] != 0 || arr[x - 1][y] != 0) { //가로
         horizon(x, y, num);
     }
@@ -149,6 +151,9 @@ void horizon(int x, int y, int num) {
     {
         if (arr[x + i][y] == num) {
             vic++;
+
+            if (vic == 5)
+                break;
         }
     }
 
@@ -161,6 +166,9 @@ void vertical(int x, int y, int num) {
     {
         if (arr[x][y+i] == num) {
             vic++;
+
+            if (vic == 5)
+                break;
         }
     }
 
@@ -173,6 +181,9 @@ void diagon_Up(int x, int y, int num) {
     {
         if (arr[x + i][y+i] == num) {
             vic++;
+
+            if (vic == 5)
+                break;
         }
     }
 
@@ -185,6 +196,9 @@ void diagon_Down(int x, int y, int num) {
     {
         if (arr[x + i][y - i] == num) {
             vic++;
+
+            if (vic == 5)
+                break;
         }
     }
 
